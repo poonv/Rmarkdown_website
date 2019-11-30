@@ -1,0 +1,26 @@
+name: Example2
+output_dir: www
+include: '*.html'
+navbar:
+  title: Example2
+  type: inverse
+  left:
+  - icon: glyphicon-home
+    href: index.html
+  - text: Page1
+    href: page1.html
+  - text: Dropdown1
+    menu:
+    - text: dropdown1a
+      href: dropdown1a.html
+    - text: dropdown1b
+      href: dropdown1b.html
+  
+output:
+  html_document:
+    include:
+      in_header: ./SiteResources/header.html
+      before_body: ./SiteResources/body.html
+    lib_dir: site_libs
+    self_contained: no
+
