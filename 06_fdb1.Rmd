@@ -1,0 +1,203 @@
+---
+title: "Flexdashboard Demo"
+author: "Victor Poon"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(plotly)
+library(plyr)
+library(dplyr)
+library(flexdashboard)
+library(xpose)
+library(DT)
+library(cowplot)
+library(qwraps2)
+
+options(qwraps2_markup = "markdown")
+
+Theoph<-Theoph %>% 
+  mutate(Subject=factor(Subject,levels=c("1","2","3","4","5","6","7","8","9","10","11","12")))
+
+```
+
+Descriptive
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### View Data
+
+```{r, fig.width=10}
+datatable(Theoph,
+          options = list(
+    autowidth = TRUE,
+    columnDefs = list(list(width = '25px', targets = c(1)),
+                      list(className = 'dt-center', targets = "_all"))
+      )
+    )
+```
+
+
+### Density Plots
+
+```{r, fig.width=10, fig.height=5}
+dfden<-stack( Theoph %>% left_join(
+  Theoph %>% group_by(Subject) %>% summarise(Cmax=max(conc))) 
+  %>% distinct(Subject,.keep_all = T) %>% select(Wt,Dose,Cmax)
+)
+
+plot1<-ggplot(dfden %>% filter(ind=="Dose"), aes(x = values)) +
+            geom_density(color='dodgerblue4',fill='skyblue1')+
+            labs(x="Dose (mg/kg)")+theme(axis.title.y=element_blank())
+plot2<-ggplot(dfden %>% filter(ind=="Wt"), aes(x = values)) +
+            geom_density(color='coral4',fill='peachpuff1')+
+            labs(x="Weight (kg)")+theme(axis.title.y=element_blank())
+plot_grid(plot1, plot2, ncol=2)
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Summary Table
+
+```{r results = "asis"}
+
+Theoph.unique<-distinct(Theoph,Subject,.keep_all=T)
+
+sum_stats<-
+  list(
+    "Subjects" =
+      list(
+        "N" = ~length(unique(Subject))
+      ),
+    "Dose"=
+      list(
+        "mean (sd)" = ~qwraps2::mean_sd(Theoph.unique$Dose, na_rm = TRUE),
+        "median (Q1, Q3)" = ~qwraps2::median_iqr(Theoph.unique$Dose, na_rm = TRUE),
+        "min" = ~min(Theoph.unique$Dose, na.rm = TRUE),
+        "max" = ~max(Theoph.unique$Dose, na.rm = TRUE)
+      ),
+    "Weight"=
+      list(
+        "mean (sd)" = ~qwraps2::mean_sd(Theoph.unique$Wt, na_rm = TRUE),
+        "median (Q1, Q3)" = ~qwraps2::median_iqr(Theoph.unique$Wt, na_rm = TRUE),
+        "min" = ~min(Theoph.unique$Wt, na.rm = TRUE),
+        "max" = ~max(Theoph.unique$Wt, na.rm = TRUE)
+      ),
+    "Time"=
+      list(
+        "mean (sd)" = ~qwraps2::mean_sd(Time, na_rm = TRUE),
+        "median (Q1, Q3)" = ~qwraps2::median_iqr(Time, na_rm = TRUE),
+        "min" = ~min(Time, na.rm = TRUE),
+        "max" = ~max(Time, na.rm = TRUE)
+      )
+  )
+
+options(qwraps2_markup = "markdown")
+summary_table(Theoph,sum_stats)
+
+temp<-summary_table(Theoph,sum_stats)
+
+```
+
+### Constraining Slope with stat_smooth
+
+```{r}
+plot.dat<-Theoph %>% mutate(Subject=factor(Subject,levels=1:12))
+p<-ggplot(plot.dat,aes(x=Time,y=conc,group=Subject,colour=Subject))+
+  geom_line(size=.5)+ geom_point()+
+  theme(legend.position = "none")+
+  scale_color_brewer(palette="Set3")
+ggplotly(p)
+```
+
+More Plots!
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Observed 2D Plot Facetted
+
+```{r}
+plot1<-ggplot(Theoph,aes(x=Time,y=conc))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = "none") +
+  facet_wrap(~ Subject,nrow=3)+scale_color_brewer(palette = "Set3")
+ggplotly(plot1)
+```
+
+### Observed 3D Plot
+
+
+```{r}
+p <- plot_ly(Theoph, x = ~Subject, y = ~Time, z = ~conc, type = 'scatter3d', mode = 'lines', color = ~Subject, colors="Set3")
+ggplotly(p)
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Predicted Concentrations Facetted
+
+```{r}
+
+
+      la <- lapply(levels(Theoph$Subject),
+                 function(iSubject) {
+      Theoph.i <- Theoph %>%
+        filter(Subject==iSubject)
+
+ 
+      fm1 <- nls(conc ~ SSfol(Dose, Time, lKe, lKa, lCl),data = Theoph.i)
+      
+      xvals <- seq(0, max(Theoph$Time,na.rm=T), length.out = 500)
+      data.frame(xvals,y=predict(fm1,
+                newdata = list(Time = xvals)),ID=iSubject
+                )
+      }
+    )
+
+    temp<-bind_rows(la)
+    temp<-temp %>%
+  mutate(ID=factor(ID,levels=c("1","2","3","4","5","6","7","8","9","10","11","12")))
+```
+
+```{r}
+      p<-ggplot(temp,
+            aes(x=xvals,
+                y=y,group=ID,colour=ID))+
+      geom_line(size=.5) +
+      theme(legend.position = "none") + 
+      scale_color_brewer(palette = "Set3") + 
+      facet_wrap(~ ID,nrow=3)
+      p<-ggplotly(p)
+      p
+
+
+```
+
+###  Predicted Concentrations 3D
+
+```{r}
+
+      
+            p <- plot_ly(temp, 
+                   x = ~ID, 
+                   y = ~xvals, 
+                   z = ~y, 
+                   type = 'scatter3d', 
+                   mode = 'lines', 
+                   color = ~ID, 
+                   colors="Set3")
+      p
+```

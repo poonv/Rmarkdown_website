@@ -1,0 +1,85 @@
+---
+output: 
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+      toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(qwraps2)
+```
+
+# Data Manipulation {#section1}
+```{r}
+Theoph<-Theoph %>% 
+  mutate(Subject=factor(Subject,levels=c("1","2","3","4","5","6","7","8","9","10","11","12")))
+data.t0<-Theoph %>% filter(Time==0)
+```
+
+# Data Summary
+
+[Data Description](https://www.rdocumentation.org/packages/datasets/versions/3.6.1/topics/Theoph)
+```{r results = "asis"}
+Theoph.unique<-distinct(Theoph,Subject,.keep_all=T)
+
+sum_stats<-
+  list(
+    "Subjects" =
+      list(
+        "N" = ~length(unique(Subject))
+      ),
+    "Dose"=
+      list(
+        "mean (sd)" = ~qwraps2::mean_sd(Theoph.unique$Dose, na_rm = TRUE),
+        "median (Q1, Q3)" = ~qwraps2::median_iqr(Theoph.unique$Dose, na_rm = TRUE),
+        "min" = ~min(Theoph.unique$Dose, na.rm = TRUE),
+        "max" = ~max(Theoph.unique$Dose, na.rm = TRUE)
+      ),
+    "Weight"=
+      list(
+        "mean (sd)" = ~qwraps2::mean_sd(Theoph.unique$Wt, na_rm = TRUE),
+        "median (Q1, Q3)" = ~qwraps2::median_iqr(Theoph.unique$Wt, na_rm = TRUE),
+        "min" = ~min(Theoph.unique$Wt, na.rm = TRUE),
+        "max" = ~max(Theoph.unique$Wt, na.rm = TRUE)
+      ),
+    "Time"=
+      list(
+        "mean (sd)" = ~qwraps2::mean_sd(Time, na_rm = TRUE),
+        "median (Q1, Q3)" = ~qwraps2::median_iqr(Time, na_rm = TRUE),
+        "min" = ~min(Time, na.rm = TRUE),
+        "max" = ~max(Time, na.rm = TRUE)
+      )
+  )
+
+options(qwraps2_markup = "markdown")
+summary_table(Theoph,sum_stats)
+```
+
+# Concentration vs Time
+```{r}
+plot1<-ggplot(Theoph,aes(x=Time,y=conc,group=Subject,colour=Subject))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = "none")+scale_color_brewer(palette = "Set3")
+plot1
+```
+
+# Concentration vs Time by Subject
+
+[Back to Top](#section1)
+```{r}
+plot1<-ggplot(Theoph,aes(x=Time,y=conc))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = "none") +
+  facet_wrap(~ Subject,nrow=3)+scale_color_brewer(palette = "Set3")
+plot1
+```

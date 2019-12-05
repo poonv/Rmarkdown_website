@@ -1,20 +1,28 @@
-name: Example2
+name: Rmd_Demo
 output_dir: www
 include: '*.html'
 navbar:
-  title: Example2
+  title: Rmd Demo
   type: inverse
   left:
   - icon: glyphicon-home
     href: index.html
-  - text: Page1
-    href: page1.html
-  - text: Dropdown1
+  - text: Simple Interactive Bits
     menu:
-    - text: dropdown1a
-      href: dropdown1a.html
-    - text: dropdown1b
-      href: dropdown1b.html
+    - text: Links
+      href: 01_section_links.html
+    - text: Code Hiding
+      href: 02_code_hiding.html
+    - text: Table of Contents
+      href: 03_TOC.html
+    - text: Tabs
+      href: 04_tabs.html
+  - text: HTML Widgets
+    href: 05_Html_widgets.html
+  - text: Dashboards
+    href: 06_fdb1.html
+  - text: Shiny RMarkdwon
+    href: https://rsconnect.roche.com/connect/#/apps/1151
   
 output:
   html_document:

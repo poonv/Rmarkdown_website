@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>04_tabs.utf8.md</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  .visible-sm-block {padding-top: 120px;}
+  .visible-md-block {padding-top: 60px;}
+  .visible-lg-block {padding-top: 0px;}
+  
+</style>
+
+
+<span class=visible-sm-block> </span>
+<span class=visible-md-block> </span>
+<span class=visible-lg-block> </span>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Rmd Demo</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="glyphicon glyphicon-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Simple Interactive Bits
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_section_links.html">Links</a>
+    </li>
+    <li>
+      <a href="02_code_hiding.html">Code Hiding</a>
+    </li>
+    <li>
+      <a href="03_TOC.html">Table of Contents</a>
+    </li>
+    <li>
+      <a href="04_tabs.html">Tabs</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="05_Html_widgets.html">HTML Widgets</a>
+</li>
+<li>
+  <a href="06_fdb1.html">Dashboards</a>
+</li>
+<li>
+  <a href="https://rsconnect.roche.com/connect/#/apps/1151">Shiny RMarkdwon</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<style type="text/css">
+  .visible-sm-block {padding-top: 120px;}
+  .visible-md-block {padding-top: 60px;}
+  .visible-lg-block {padding-top: 0px;}
+  .navbar-image {width: 150px;}
+  .warning { 
+      font-size: 200% ; 
+      color: red; 
+      padding-top: 200px;
+    }
+    }
+  
+  @media (min-width: 992px) and (max-width: 1200px){
+    .navbar-image {width: 19%;}
+    
+    .section h1 {
+  padding-top: 110px;
+  margin-top: -110px;
+  }
+
+  .section h2 {
+  padding-top: 110px;
+  margin-top: -110px;
+  }
+  
+    .section h3 {
+  padding-top: 110px;
+  margin-top: -110px;
+  }
+  }
+  
+  
+  @media (min-width: 768px) and (max-width: 991px){
+
+    .navbar-image {width: 19%;}
+    
+    .section h1 {
+  padding-top: 160px;
+  margin-top: -160px;
+  }
+
+  .section h2 {
+  padding-top: 160px;
+  margin-top: -160px;
+  }
+  
+    .section h3 {
+  padding-top: 160px;
+  margin-top: -160px;
+  }
+  }
+  
+@media (max-width: 768px){
+  .navbar-image {width: 19%;}
+
+}
+  
+
+</style>
+
+
+<!--[if IE]>
+<p/>
+<p/>
+<p class="warning"> Dear Internet Explorer user: Please ensure compatibility view settings are turned OFF in order to view this website propertly. For best results, use Chrome. <br/>
+<p/>
+ <![endif]-->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="data-manipulation" class="section level1">
+<h1>Data Manipulation</h1>
+<pre class="r"><code>Theoph&lt;-Theoph %&gt;% 
+  mutate(Subject=factor(Subject,levels=c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;)))
+data.t0&lt;-Theoph %&gt;% filter(Time==0) %&gt;% 
+  mutate(Dose2=Dose*Wt)</code></pre>
+</div>
+<div id="data-summary" class="section level1">
+<h1>Data Summary</h1>
+<p><a href="https://www.rdocumentation.org/packages/datasets/versions/3.6.1/topics/Theoph">Data Description</a></p>
+<pre class="r"><code>Theoph.unique&lt;-distinct(Theoph,Subject,.keep_all=T)
+
+sum_stats&lt;-
+  list(
+    &quot;Subjects&quot; =
+      list(
+        &quot;N&quot; = ~length(unique(Subject))
+      ),
+    &quot;Dose&quot;=
+      list(
+        &quot;mean (sd)&quot; = ~qwraps2::mean_sd(Theoph.unique$Dose, na_rm = TRUE),
+        &quot;median (Q1, Q3)&quot; = ~qwraps2::median_iqr(Theoph.unique$Dose, na_rm = TRUE),
+        &quot;min&quot; = ~min(Theoph.unique$Dose, na.rm = TRUE),
+        &quot;max&quot; = ~max(Theoph.unique$Dose, na.rm = TRUE)
+      ),
+    &quot;Weight&quot;=
+      list(
+        &quot;mean (sd)&quot; = ~qwraps2::mean_sd(Theoph.unique$Wt, na_rm = TRUE),
+        &quot;median (Q1, Q3)&quot; = ~qwraps2::median_iqr(Theoph.unique$Wt, na_rm = TRUE),
+        &quot;min&quot; = ~min(Theoph.unique$Wt, na.rm = TRUE),
+        &quot;max&quot; = ~max(Theoph.unique$Wt, na.rm = TRUE)
+      ),
+    &quot;Time&quot;=
+      list(
+        &quot;mean (sd)&quot; = ~qwraps2::mean_sd(Time, na_rm = TRUE),
+        &quot;median (Q1, Q3)&quot; = ~qwraps2::median_iqr(Time, na_rm = TRUE),
+        &quot;min&quot; = ~min(Time, na.rm = TRUE),
+        &quot;max&quot; = ~max(Time, na.rm = TRUE)
+      )
+  )
+
+options(qwraps2_markup = &quot;markdown&quot;)
+summary_table(Theoph,sum_stats)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Theoph (N = 132)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Subjects</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   N</td>
+<td align="left">12</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Dose</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">4.63 ± 0.75</td>
+</tr>
+<tr class="odd">
+<td align="left">   median (Q1, Q3)</td>
+<td align="left">4.53 (4.30, 5.04)</td>
+</tr>
+<tr class="even">
+<td align="left">   min</td>
+<td align="left">3.1</td>
+</tr>
+<tr class="odd">
+<td align="left">   max</td>
+<td align="left">5.86</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Weight</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="odd">
+<td align="left">   mean (sd)</td>
+<td align="left">69.58 ± 9.50</td>
+</tr>
+<tr class="even">
+<td align="left">   median (Q1, Q3)</td>
+<td align="left">70.50 (63.57, 74.43)</td>
+</tr>
+<tr class="odd">
+<td align="left">   min</td>
+<td align="left">54.6</td>
+</tr>
+<tr class="even">
+<td align="left">   max</td>
+<td align="left">86.4</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Time</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">5.89 ± 6.93</td>
+</tr>
+<tr class="odd">
+<td align="left">   median (Q1, Q3)</td>
+<td align="left">3.53 (0.59, 9.00)</td>
+</tr>
+<tr class="even">
+<td align="left">   min</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">   max</td>
+<td align="left">24.65</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="concentration-vs-time-tabs" class="section level1 tabset">
+<h1>Concentration vs Time Tabs</h1>
+<div id="regular" class="section level2 tabset">
+<h2>Regular</h2>
+<div id="all-subjects" class="section level3">
+<h3>All Subjects</h3>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph,aes(x=Time,y=conc,group=Subject,colour=Subject))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="by-subject" class="section level3">
+<h3>By Subject</h3>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph,aes(x=Time,y=conc))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;) +
+  facet_wrap(~ Subject,nrow=3)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+</div>
+<div id="dropdown" class="section level2 tabset tabset-dropdown">
+<h2>Dropdown</h2>
+<div id="all-subjects-1" class="section level3">
+<h3>All Subjects</h3>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph,aes(x=Time,y=conc,group=Subject,colour=Subject))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="by-subject-1" class="section level3">
+<h3>By Subject</h3>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph,aes(x=Time,y=conc))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;) +
+  facet_wrap(~ Subject,nrow=3)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+<div id="by-weight" class="section level2 tabset">
+<h2>By Weight</h2>
+<div id="not-overweight" class="section level3 tabset">
+<h3>Not Overweight</h3>
+<div id="all-subjects-2" class="section level4">
+<h4>All Subjects</h4>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph %&gt;% filter(Wt&lt;72) ,aes(x=Time,y=conc,group=Subject,colour=Subject))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="by-subjects" class="section level4">
+<h4>By Subjects</h4>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph %&gt;% filter(Wt&lt;72),
+              aes(x=Time,y=conc))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;) +
+  facet_wrap(~ Subject,nrow=3)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="overweight" class="section level3 tabset tabset-dropdown">
+<h3>Overweight</h3>
+<div id="all-subjects-3" class="section level4">
+<h4>All Subjects</h4>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph %&gt;% filter(Wt&gt;=72),
+              aes(x=Time,y=conc,group=Subject,colour=Subject))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="by-subjects-1" class="section level4">
+<h4>By Subjects</h4>
+<pre class="r"><code>plot1&lt;-ggplot(Theoph %&gt;% filter(Wt&gt;=72),
+              aes(x=Time,y=conc))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+
+  theme(legend.position = &quot;none&quot;) +
+  facet_wrap(~ Subject,ncol=4)+scale_color_brewer(palette = &quot;Set3&quot;)
+plot1</code></pre>
+<p><img src="04_tabs_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

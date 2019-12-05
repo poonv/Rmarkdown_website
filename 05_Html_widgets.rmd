@@ -1,0 +1,61 @@
+---
+output: 
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+      toc_depth: 2
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(warning=FALSE,message=FALSE)
+
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(DT)
+library(RColorBrewer)
+```
+
+# Data Manipulation
+```{r}
+Theoph1<-Theoph %>% 
+  mutate(Subject=factor(Subject,levels=c("1","2","3","4","5","6","7","8","9","10","11","12")))
+
+data.t0<-Theoph1 %>% filter(Time==0) %>% 
+  mutate(Dose2=Dose*Wt)
+
+```
+
+# HTML Widgets {.tabset}
+
+## DTables 
+```{r}
+datatable(Theoph1,
+          options = list(
+    autowidth = TRUE,
+    columnDefs = list(list(width = '25px', targets = c(1)),
+                      list(className = 'dt-center', targets = "_all"))
+      )
+    )
+```
+
+## Plotly 2d Plots
+
+```{r}
+plot1<-ggplot(Theoph1,aes(x=Time,y=conc,group=Subject,colour=Subject))+
+  geom_line(size=.5)+
+  geom_point(size=.5)+scale_color_brewer(palette = "Set3")+
+  theme(legend.position = "none")
+ggplotly(plot1)
+  
+```
+
+## Plotly 3d Plots
+```{r}
+
+p <- plot_ly(Theoph1, x = ~Subject, y = ~Time, z = ~conc, type = 'scatter3d', mode = 'lines', color = ~Subject, colors="Set3")
+p 
+```

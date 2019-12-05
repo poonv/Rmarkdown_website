@@ -1,5 +1,6 @@
 ---
-title: "Index"
+title: "RMarkdown Interactive Bits Demo"
+author: "Victor Poon"
 output: 
   html_document:
     toc: true
@@ -8,5 +9,12 @@ output:
 
 # Overview
 
-* Testing...
-* Index Page
+This is a RMarkdown website composed of multiple
+RMarkdown files to demonstrate the interactive 
+capabilities of RMarkdown.
+
+# Issues
+
+Flexdashboard page is not embedded onto the page. Similarily with the shiny RMarkdown document.
+
+See [github link](https://github.com/poonv/Rmarkdown_website) for code
