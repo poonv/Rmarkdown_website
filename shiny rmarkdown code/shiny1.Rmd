@@ -1,0 +1,186 @@
+---
+runtime: shiny
+output: 
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+      toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(plotly)
+library(DT)
+```
+
+# Two Compartment Open Model
+```{r}
+inputPanel(
+    fileInput("file1", "Choose CSV File",
+                multiple = TRUE,
+                accept = c("text/csv",
+             "text/comma-separated-values,text/plain",
+                        ".csv")),
+    selectInput("dose",
+                "Select Dose variable:",
+                choices = NULL,selected = NA),
+    selectInput("conc",
+                "Select Concentration variable:",
+                choices = NULL,selected = NA),
+    selectInput("time",
+                "Select Time variable:",
+                choices = NULL,selected = NA),
+    selectInput("idVar",
+                "Select ID variable:",
+                choices = NULL,selected = NA)
+)
+
+data1 <- reactive({
+  if(is.null(input$file1)) {return(NULL)}
+  if(!is.null(input$file1)){
+    df<-read.csv(input$file1$datapath)
+    return(df)
+    }
+})
+
+observe({
+  updateSelectInput(session,"dose",
+                     choices = colnames(data1()),
+                    selected = NA)
+  updateSelectInput(session,"conc",
+                     choices = colnames(data1()),
+                    selected = NA)
+  updateSelectInput(session,"time",
+                     choices = colnames(data1()),
+                    selected = NA)
+  updateSelectInput(session,"idVar",
+                     choices = colnames(data1()),
+                    selected = NA)
+})
+```
+
+
+```{r}
+
+
+
+plot.data <- reactive({
+  if(is.null(input$dose) | is.null(input$conc) |
+     is.null(input$time) | is.null(input$idVar)) {return(NULL)
+  } else {
+      
+      temp.data<-data1() %>% 
+        mutate(ID=factor(!!sym(input$idVar)),
+               time=!!sym(input$time))
+
+      
+      la <- lapply(levels(temp.data$ID),
+                 function(iSubject) {
+      Theoph.i <- temp.data %>%
+        filter(ID==iSubject)
+
+      form1<-as.formula(paste(input$conc," ~ ",
+                              "SSfol(",
+                              input$dose,", ",
+                              input$time,
+                              ", lKe, lKa, lCl)"))
+      fm1 <- nls(form1,data = Theoph.i)
+      
+      xvals <- seq(0, max(temp.data$time,na.rm=T), length.out = 500)
+      data.frame(xvals,y=predict(fm1,
+                newdata = list(Time = xvals)),ID=iSubject
+                )
+      }
+    )
+
+    temp<-bind_rows(la)
+
+    return(temp)
+    
+    }
+})
+```
+
+```{r}
+plot1 <- reactive({
+  if(is.null(plot.data())) {return(NULL)
+  } else {
+
+    if(input$gtype=="Regular"){
+      p<-ggplot(plot.data(),
+            aes(x=xvals,
+                y=y,group=ID,colour=ID))+
+      geom_line(size=.5) +
+      theme(legend.position = "none") + 
+      scale_color_brewer(palette = input$palette)
+      p<-ggplotly(p)
+    }
+    
+    if(input$gtype=="Faceted"){
+      p<-ggplot(plot.data(),
+            aes(x=xvals,
+                y=y,group=ID,colour=ID))+
+      geom_line(size=.5) +
+      theme(legend.position = "none") + 
+      scale_color_brewer(palette = input$palette) + 
+      facet_wrap(~ ID,nrow=3)
+      p<-ggplotly(p)
+    }
+    
+    if(input$gtype=="3D"){
+
+      
+      p <- plot_ly(plot.data(), 
+                   x = ~ID, 
+                   y = ~xvals, 
+                   z = ~y, 
+                   type = 'scatter3d', 
+                   mode = 'lines', 
+                   color = ~ID, 
+                   colors=input$palette)
+    }
+    
+    return(p)
+}
+  })
+```
+
+# View Data
+```{r}
+dt<-reactive({
+datatable(data1(),
+          options = list(
+    autowidth = TRUE,
+    columnDefs = list(list(width = '25px', targets = c(1)),
+                      list(className = 'dt-center', targets = "_all"))
+      )
+    )
+})
+
+renderDT(dt())
+```
+
+# Model Predicted PK Plots
+```{r}
+inputPanel(
+  selectInput("gtype",
+                "Select Graph Type:",
+                choices = c("Regular",
+                            "Faceted",
+                            "3D"),selected = "Regular"),
+  selectInput("palette",
+                "Select Color Palette:",
+                choices = c("Set3",
+                            "Paired"),
+              selected = "Set3")
+)
+
+renderPlotly(print(plot1()))
+
+```
